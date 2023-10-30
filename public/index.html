@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Meetaverse</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <link rel="stylesheet" href="/assets/css/reset.css" />
+    <link rel="stylesheet" href="/assets/css/xeicon.css" />
+    <link rel="stylesheet" href="/assets/css/client.css" />
+
+    <script src="/assets/libs/jquery-1.11.1.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <!-- three -->
+    <script src="/assets/libs/three.min.js"></script>
+    <script src="/assets/libs/inflate.min.js"></script>
+    <script src="/assets/libs/FBXLoader.js"></script>
+    <script src="/assets/libs/Detector.js"></script>
+
+    <!-- control -->
+    <script src="/assets/libs/toon3d.js"></script>
+
+    <!-- main -->
+    <script src="/assets/js/game.js"></script>
+    <script src="/assets/js/player.js"></script>
+  </head>
+
+  <body>
+    <div class="floating-ui">
+      <button id="btnChangeCamera">
+        <i class="xi-videocam"><span id="camName"></span></i>
+      </button>
+      <button id="btnChangeName"><i class="xi-profile"></i></button>
+      <button id="btnChangeAnimation"><i class="xi-emoticon-cool"></i></button>
+    </div>
+
+    <div id="game"></div>
+
+    <script>
+      var game;
+      document.addEventListener("DOMContentLoaded", function () {
+        game = new Game();
+      });
+    </script>
+  </body>
+</html>

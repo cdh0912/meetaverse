@@ -1,0 +1,70 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #000;
+}
+html,
+body,
+#game {
+  width: 100%;
+  height: 100%;
+}
+#game canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.floating-ui {
+  position: absolute;
+  top: min(30px, 4vmin);
+  right: min(30px, 4vmin);
+  display: flex;
+  flex-direction: column;
+  gap: min(20px, 4vmin);
+}
+.floating-ui button {
+  padding: 1px;
+  font-size: 0;
+  background: rgb(0 0 0 / 10%);
+  border-radius: 50%;
+}
+.floating-ui button i {
+  font-size: min(10vmin, 48px);
+  color: #fff;
+}
+.floating-ui button i.xi-videocam {
+  transform: scale(0.9);
+}
+.floating-ui button i.xi-videocam span {
+  position: absolute;
+  top: 50%;
+  left: 42%;
+  transform: translate(-50%, -50%);
+  font-size: 11px;
+  font-weight: 900;
+  color: #c1c1c1;
+}
+#joyStick {
+  position: absolute;
+  bottom: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  background: rgba(126, 126, 126, 0.5);
+  border: #444 solid medium;
+  border-radius: 50%;
+  box-sizing: content-box;
+}
+#joyStick #thumb {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+}
