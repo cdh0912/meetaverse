@@ -30,24 +30,25 @@ class Game {
 
     const game = this;
     this.anims = ["Walking", "Walking Backwards", "Turn", "Running", "Pointing", "Talking", "Pointing Gesture"];
+    this.gestureAnims = ["Pointing", "Talking", "Pointing Gesture"];
 
+    //#region ___ preloader ___
     const options = {
       assets: [`/assets/images/nx.jpg`, `/assets/images/px.jpg`, `/assets/images/ny.jpg`, `/assets/images/py.jpg`, `/assets/images/nz.jpg`, `/assets/images/pz.jpg`],
       oncomplete: function () {
         game.init();
       },
     };
-
     this.anims.forEach(function (anim) {
       options.assets.push(`/assets/fbx/anims/${anim}.fbx`);
     });
     options.assets.push(`/assets/fbx/town.fbx`);
+    const preloader = new Preloader(options);
+    //#endregion
 
     this.mode = this.modes.PRELOAD;
 
     this.clock = new THREE.Clock();
-
-    const preloader = new Preloader(options);
 
     window.onError = function (error) {
       console.error(JSON.stringify(error));
@@ -95,7 +96,6 @@ class Game {
 
     this.loadEnvironment(loader);
 
-    // TODO: 키보드 방향키 연동
     this.joystick = new JoyStick({
       onMove: this.playerControl,
       game: this,
@@ -116,6 +116,11 @@ class Game {
     $(window).on("resize", () => game.onWindowResize(), false);
 
     $(window).on("keydown", (e) => game.onKeyDown(e), false);
+
+    // TODO: 닉네임 변경
+    $("#btnChangeNickName").on("click", () => game.changeNickName());
+
+    $("#btnAnimateGesture").on("click", () => game.animateGesture());
   }
 
   // 맵 로드
@@ -151,22 +156,20 @@ class Game {
 
   // 캐릭터(플레이어) 애니메이션 전부 로드
   loadNextAnim(loader) {
-    let anim = this.anims.pop();
     const game = this;
-    loader.load(`/assets/fbx/anims/${anim}.fbx`, function (object) {
-      game.player.animations[anim] = object.animations[0];
-      if (game.anims.length > 0) {
-        game.loadNextAnim(loader);
-      } else {
-        delete game.anims;
-        game.action = "Idle";
-        game.mode = game.modes.ACTIVE;
-        game.animate();
-      }
+    this.anims.forEach(function (anim) {
+      loader.load(`/assets/fbx/anims/${anim}.fbx`, function (object) {
+        game.player.animations[anim] = object.animations[0];
+      });
     });
+    game.action = "Idle";
+    game.mode = game.modes.ACTIVE;
+    game.animate();
   }
 
+  // 걷기/뛰기/돌기/뒷걸음/대기 모션
   playerControl(forward, turn) {
+    console.log(forward, turn);
     turn = -turn;
 
     if (forward > 0.3) {
@@ -281,9 +284,24 @@ class Game {
     });
   }
 
-  // onMouseDown(e) {}
+  // TODO: 클릭으로 플레이어 이동
+  onMouseDown(e) {}
 
-  // onKeyDown(e) {}
+  // TODO: 키보드 wasd 방향키로 플레이어 이동
+  onKeyDown(e) {
+    var keyCode = e.which;
+    if (keyCode == 87 || keyCode == 38) {
+      // w / up
+    } else if (keyCode == 65 || keyCode == 37) {
+      // a / left
+    } else if (keyCode == 83 || keyCode == 40) {
+      // s / down
+    } else if (keyCode == 68 || keyCode == 39) {
+      // d / right
+    } else if (keyCode == 32) {
+      // spacebar
+    }
+  }
 
   getRemotePlayerById(id) {
     if (this.remotePlayers === undefined || this.remotePlayers.length === 0) return;
@@ -336,9 +354,18 @@ class Game {
   }
 
   //#region ___ Button Function ___
-  changeName() {}
+  changeNickName() {
+    console.log("닉네임 변경");
+  }
 
-  changeAnimation() {}
+  animateGesture() {
+    const animCnt = this.animCnt ?? 0;
+    const len = this.gestureAnims.length;
+    const nextAnimIdx = (animCnt + 1) % len;
+    const nextAnimName = this.gestureAnims[nextAnimIdx];
 
+    this.player.action = nextAnimName;
+    this.animCnt = nextAnimIdx;
+  }
   //#endregion
 }

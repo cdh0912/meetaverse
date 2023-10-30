@@ -15,7 +15,6 @@ http.listen(port, function () {
 });
 
 // 접속 : 새 클라이언트 데이터 생성
-// TODO: 시작위치 랜덤하게 변경 / heading(시작 각도) 중앙을 보도록 변경
 io.sockets.on("connection", function (socket) {
   socket.userData = { x: 0, y: 0, z: 0, heading: 0 };
 
@@ -52,7 +51,7 @@ setInterval(function () {
 
   for (let id in io.sockets.sockets) {
     const socket = nsp.connected[id];
-    //Only push sockets that have been initialised
+    // initialize 완료된 소켓만
     if (socket.userData.model !== undefined) {
       pack.push({
         id: socket.id,
