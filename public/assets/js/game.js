@@ -113,9 +113,9 @@ class Game {
     this.container.appendChild(this.renderer.domElement);
 
     // control
-    const controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
-    controls.target.set(0, 0.5, 0);
-    controls.update();
+    // const controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+    // controls.target.set(0, 0.5, 0);
+    // controls.update();
 
     if ("ontouchstart" in window) {
       $(window).on("touchdown", (event) => game.onMouseDown(event), false);
@@ -141,7 +141,6 @@ class Game {
       game.environment = object;
       game.colliders = [];
       game.scene.add(object);
-      console.log(object);
       object.traverse(function (child) {
         if (child.type === "Mesh") {
           game.colliders.push(child);
@@ -181,7 +180,6 @@ class Game {
 
   // 걷기/뛰기/돌기/뒷걸음/대기 모션
   playerControl(forward, turn) {
-    console.log(this.player.object.position);
     turn = -turn;
 
     if (forward > 0.3) {
