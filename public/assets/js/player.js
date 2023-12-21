@@ -27,13 +27,13 @@ class Player {
     const loader = new THREE.FBXLoader();
     const player = this;
 
-    function getRandomAroundValue(base) {
-      const min = base - 500;
-      const max = base + 500;
+    function getRandomAroundValue(base, range = 500) {
+      const min = base - range;
+      const max = base + range;
       return Math.random() * (max - min) + min;
     }
 
-    loader.load(`/assets/fbx/people/${model}.fbx`, function (object) {
+    loader.load(`/assets/models/people/${model}.fbx`, function (object) {
       object.mixer = new THREE.AnimationMixer(object);
       player.root = object;
       player.mixer = object.mixer;
@@ -59,8 +59,13 @@ class Player {
 
       const randomDirection = Math.floor(Math.random() * 10);
       player.object = new THREE.Object3D();
-      player.object.position.set(getRandomAroundValue(3100), 0, getRandomAroundValue(-200));
-      player.object.rotation.set(0, randomDirection, 0);
+      // 플레이어 시작 위치
+      // player.object.position.set(getRandomAroundValue(17891), 70, getRandomAroundValue(-3572));
+      player.object.position.set(-4570.466993301836, 74.09778044642792, -9177.773433758168);
+
+      // 플레이어 시작 방향
+      player.object.rotation.set(0, 5.5, 0);
+      // player.object.rotation.set(0, randomDirection, 0);
 
       player.object.add(object);
       if (player.deleted === undefined) game.scene.add(player.object);

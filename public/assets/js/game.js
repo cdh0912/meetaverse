@@ -29,8 +29,8 @@ class Game {
     document.body.appendChild(this.container);
 
     const game = this;
-    this.anims = ["Walking", "Walking Backwards", "Turn", "Running", "Pointing", "Talking", "Pointing Gesture"];
-    this.gestureAnims = ["Pointing", "Talking", "Pointing Gesture"];
+    this.anims = ["Walking", "Walking Backwards", "Turn", "Running", "Pointing", "Talking", "Pointing Gesture", "Punch Combo", "Drop Kick"];
+    this.gestureAnims = ["Pointing", "Talking", "Pointing Gesture", "Punch Combo", "Drop Kick"];
 
     //#region ___ preloader ___
     const options = {
@@ -40,9 +40,9 @@ class Game {
       },
     };
     this.anims.forEach(function (anim) {
-      options.assets.push(`/assets/fbx/anims/${anim}.fbx`);
+      options.assets.push(`/assets/models/anims/${anim}.fbx`);
     });
-    options.assets.push(`/assets/fbx/town.fbx`);
+    options.assets.push(`/assets/models/city.fbx`);
     const preloader = new Preloader(options);
     //#endregion
 
@@ -59,12 +59,12 @@ class Game {
   init() {
     this.mode = this.modes.INITIALISING;
 
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 10, 200000);
+    this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 10, 200000);
 
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x00a0f0);
 
-    //#region ___ LIGHT ___
+    // light
     const ambient = new THREE.AmbientLight(0xaaaaaa);
     this.scene.add(ambient);
 
@@ -86,7 +86,12 @@ class Game {
 
     this.sun = light;
     this.scene.add(light);
-    //#endregion
+
+    // ground
+    // const mesh = new THREE.Mesh(new THREE.PlaneBufferGeometry(10000, 10000), new THREE.MeshPhongMaterial({ color: 0x999999, depthWrite: false }));
+    // mesh.rotation.x = -Math.PI / 2;
+    // mesh.receiveShadow = true;
+    // this.scene.add(mesh);
 
     // model
     const loader = new THREE.FBXLoader();
@@ -106,6 +111,11 @@ class Game {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.shadowMap.enabled = true;
     this.container.appendChild(this.renderer.domElement);
+
+    // control
+    const controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+    controls.target.set(0, 0.5, 0);
+    controls.update();
 
     if ("ontouchstart" in window) {
       $(window).on("touchdown", (event) => game.onMouseDown(event), false);
@@ -127,19 +137,21 @@ class Game {
   loadEnvironment(loader) {
     const game = this;
     // TODO:
-    loader.load(`/assets/fbx/town.fbx`, function (object) {
+    loader.load(`/assets/models/city.fbx`, function (object) {
       game.environment = object;
       game.colliders = [];
       game.scene.add(object);
+      console.log(object);
       object.traverse(function (child) {
-        if (child.isMesh) {
-          if (child.name.startsWith("proxy")) {
-            game.colliders.push(child);
-            child.material.visible = false;
-          } else {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
+        if (child.type === "Mesh") {
+          game.colliders.push(child);
+          // if (child.name.startsWith("proxy")) {
+          //   game.colliders.push(child);
+          //   child.material.visible = false;
+          // } else {
+          //   child.castShadow = true;
+          //   child.receiveShadow = true;
+          // }
         }
       });
 
@@ -158,7 +170,7 @@ class Game {
   loadNextAnim(loader) {
     const game = this;
     this.anims.forEach(function (anim) {
-      loader.load(`/assets/fbx/anims/${anim}.fbx`, function (object) {
+      loader.load(`/assets/models/anims/${anim}.fbx`, function (object) {
         game.player.animations[anim] = object.animations[0];
       });
     });
@@ -169,7 +181,7 @@ class Game {
 
   // 걷기/뛰기/돌기/뒷걸음/대기 모션
   playerControl(forward, turn) {
-    console.log(forward, turn);
+    console.log(this.player.object.position);
     turn = -turn;
 
     if (forward > 0.3) {
