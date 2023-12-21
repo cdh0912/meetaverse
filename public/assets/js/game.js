@@ -309,6 +309,20 @@ class Game {
     const keysPressed = this.keysPressed;
     keysPressed[keyCode] = true;
 
+    this.keyboardControl();
+  }
+
+  onKeyUp(e) {
+    const keyCode = e.which;
+    const keysPressed = this.keysPressed;
+    delete keysPressed[keyCode];
+
+    this.keyboardControl();
+  }
+
+  keyboardControl() {
+    const keysPressed = this.keysPressed;
+
     const isUp = keysPressed[87] || keysPressed[38];
     const isDown = keysPressed[83] || keysPressed[40];
     const isLeft = keysPressed[65] || keysPressed[37];
@@ -333,13 +347,6 @@ class Game {
     } else if (keysPressed[32]) {
       // spacebar
     }
-  }
-
-  onKeyUp(e) {
-    const keyCode = e.which;
-    const keysPressed = this.keysPressed;
-    delete keysPressed[keyCode];
-
     if (Object.keys(keysPressed).length === 0) {
       game.playerControl(0, 0);
     }
