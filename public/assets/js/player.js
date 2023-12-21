@@ -60,8 +60,8 @@ class Player {
       const randomDirection = Math.floor(Math.random() * 10);
       player.object = new THREE.Object3D();
       // 플레이어 시작 위치
-      // player.object.position.set(getRandomAroundValue(17891), 70, getRandomAroundValue(-3572));
-      player.object.position.set(-4570.466993301836, 74.09778044642792, -9177.773433758168);
+      player.object.position.set(getRandomAroundValue(17891), 70, getRandomAroundValue(-3572));
+      // player.object.position.set(-4570.466993301836, 74.09778044642792, -9177.773433758168);
 
       // 플레이어 시작 방향
       player.object.rotation.set(0, 5.5, 0);
