@@ -357,12 +357,16 @@ class SFX {
 // https://codepen.io/nik-lever/pen/qvZRoV
 class JoyStick {
   constructor(options) {
-    const circle = document.createElement("div");
-    circle.id = "joyStick";
-    const thumb = document.createElement("div");
-    thumb.id = "thumb";
-    circle.appendChild(thumb);
-    document.body.appendChild(circle);
+    let circle = document.querySelector("#joyStick");
+    let thumb = document.querySelector("#thumb");
+    if (!circle && !thumb) {
+      circle = document.createElement("div");
+      circle.id = "joyStick";
+      thumb = document.createElement("div");
+      thumb.id = "thumb";
+      circle.appendChild(thumb);
+      document.body.appendChild(circle);
+    }
     this.domElement = thumb;
     this.maxRadius = options.maxRadius || 40;
     this.maxRadiusSquared = this.maxRadius * this.maxRadius;

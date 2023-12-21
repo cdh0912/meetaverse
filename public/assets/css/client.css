@@ -68,3 +68,31 @@ body,
   border-radius: 50%;
   background: #fff;
 }
+#joyStick .direction {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+#joyStick .direction span {
+  position: absolute;
+  color: white;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  opacity: 0.5;
+}
+#joyStick .direction .w {
+  top: 0;
+  left: 50%;
+}
+#joyStick .direction .a {
+  top: 50%;
+  left: 0;
+}
+#joyStick .direction .s {
+  top: 100%;
+  left: 50%;
+}
+#joyStick .direction .d {
+  top: 50%;
+  left: 100%;
+}

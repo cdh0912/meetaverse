@@ -25,12 +25,14 @@ class Game {
     this.initialisingPlayers = []; // 캐릭터 initialize 할 플레이어들
     this.remoteData = [];
 
+    this.keysPressed = {};
+
     this.container = document.querySelector("#game");
     document.body.appendChild(this.container);
 
     const game = this;
-    this.anims = ["Walking", "Walking Backwards", "Turn", "Running", "Pointing", "Talking", "Pointing Gesture", "Punch Combo", "Drop Kick"];
-    this.gestureAnims = ["Pointing", "Talking", "Pointing Gesture", "Punch Combo", "Drop Kick"];
+    this.anims = ["Walking", "Walking Backwards", "Turn", "Running", "Pointing", "Talking", "Pointing Gesture"]; // , "Punch Combo", "Drop Kick"
+    this.gestureAnims = ["Pointing", "Talking", "Pointing Gesture"]; // , "Punch Combo", "Drop Kick"
 
     //#region ___ preloader ___
     const options = {
@@ -59,7 +61,7 @@ class Game {
   init() {
     this.mode = this.modes.INITIALISING;
 
-    this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 10, 200000);
+    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 10, 200000);
 
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x00a0f0);
@@ -125,7 +127,9 @@ class Game {
 
     $(window).on("resize", () => game.onWindowResize(), false);
 
-    $(window).on("keydown", (e) => game.onKeyDown(e), false);
+    $(window).on("keydown", (e) => game.onKeyDown(e));
+
+    $(window).on("keyup", (e) => game.onKeyUp(e));
 
     // TODO: 닉네임 변경
     $("#btnChangeNickName").on("click", () => game.changeNickName());
@@ -269,7 +273,9 @@ class Game {
           let rplayer;
           // 이미 있는 리모트 플레이어들 배열에서 확인
           game.remotePlayers.forEach(function (player) {
-            if (player.id === data.id) rplayer = player;
+            if (player.id === data.id) {
+              rplayer = player;
+            }
           });
           if (rplayer === undefined) {
             // 해당 플레이어 initialize
@@ -297,19 +303,45 @@ class Game {
   // TODO: 클릭으로 플레이어 이동
   onMouseDown(e) {}
 
-  // TODO: 키보드 wasd 방향키로 플레이어 이동
+  // 키보드 wasd 방향키로 플레이어 이동
   onKeyDown(e) {
-    var keyCode = e.which;
-    if (keyCode == 87 || keyCode == 38) {
-      // w / up
-    } else if (keyCode == 65 || keyCode == 37) {
-      // a / left
-    } else if (keyCode == 83 || keyCode == 40) {
-      // s / down
-    } else if (keyCode == 68 || keyCode == 39) {
-      // d / right
-    } else if (keyCode == 32) {
+    const keyCode = e.which;
+    const keysPressed = this.keysPressed;
+    keysPressed[keyCode] = true;
+
+    const isUp = keysPressed[87] || keysPressed[38];
+    const isDown = keysPressed[83] || keysPressed[40];
+    const isLeft = keysPressed[65] || keysPressed[37];
+    const isRight = keysPressed[68] || keysPressed[39];
+
+    if (isUp && isLeft) {
+      game.playerControl(1, -1);
+    } else if (isUp && isRight) {
+      game.playerControl(1, 1);
+    } else if (isDown && isLeft) {
+      game.playerControl(-1, -1);
+    } else if (isDown && isRight) {
+      game.playerControl(-1, 1);
+    } else if (isUp) {
+      game.playerControl(1, 0);
+    } else if (isLeft) {
+      game.playerControl(0, -1);
+    } else if (isDown) {
+      game.playerControl(-1, 0);
+    } else if (isRight) {
+      game.playerControl(0, 1);
+    } else if (keysPressed[32]) {
       // spacebar
+    }
+  }
+
+  onKeyUp(e) {
+    const keyCode = e.which;
+    const keysPressed = this.keysPressed;
+    delete keysPressed[keyCode];
+
+    if (Object.keys(keysPressed).length === 0) {
+      game.playerControl(0, 0);
     }
   }
 

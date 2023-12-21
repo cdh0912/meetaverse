@@ -22,11 +22,12 @@ io.sockets.on("connection", function (socket) {
   socket.emit("setId", { id: socket.id });
 
   socket.on("disconnect", function () {
+    console.log(`${socket.id} disconnected`);
     socket.broadcast.emit("deletePlayer", { id: socket.id });
   });
 
   socket.on("init", function (data) {
-    // console.log(`socket.init ${data.model}`);
+    console.log(`socket.init ${data.model}`);
     socket.userData.model = data.model;
     socket.userData.color = data.color;
     socket.userData.x = data.x;
@@ -66,5 +67,8 @@ setInterval(function () {
       });
     }
   }
-  if (pack.length > 0) io.emit("remoteData", pack);
+  // console.log('remote user count', pack.length);
+  if (pack.length > 0) {
+    io.emit("remoteData", pack);
+  }
 }, 40);

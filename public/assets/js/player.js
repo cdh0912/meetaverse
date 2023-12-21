@@ -68,7 +68,12 @@ class Player {
       // player.object.rotation.set(0, randomDirection, 0);
 
       player.object.add(object);
-      if (player.deleted === undefined) game.scene.add(player.object);
+      if (player.deleted === undefined) {
+        // FIXME
+        setTimeout(() => {
+          game.scene.add(player.object);
+        }, 100);
+      }
 
       if (player.local) {
         game.createCameras();
@@ -118,6 +123,7 @@ class Player {
       let found = false;
       for (let data of this.game.remoteData) {
         if (data.id != this.id) continue;
+
         //Found the player
         this.object.position.set(data.x, data.y, data.z);
         const euler = new THREE.Euler(data.pb, data.heading, data.pb);
@@ -213,10 +219,10 @@ class PlayerLocal extends Player {
 
     if (!blocked) {
       if (this.motion.forward > 0) {
-        const speed = this.action === "Running" ? 1000 : 300;
+        const speed = this.action === "Running" ? 1000 : 300; // 뛰기/걷기 속도
         this.object.translateZ(delta * speed);
       } else {
-        this.object.translateZ(-delta * 30);
+        this.object.translateZ(-delta * 300); // 뒤로 가기 속도
       }
     }
 
